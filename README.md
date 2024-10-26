@@ -1,2 +1,17 @@
-# nexjs_school_dashboard_example
-A NextJs example for a school dashboard using NextJs, Tailwind and Typescript
+# Lama Dev School Management Dashboard
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
