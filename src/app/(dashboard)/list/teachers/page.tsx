@@ -2,6 +2,7 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
+import { ITEM_PER_PAGE } from "@/lib/config";
 import { role, teachersData } from "@/lib/data";
 import prisma from "@/lib/prisma";
 import { Class, Subject, Teacher } from "@prisma/client";
@@ -87,16 +88,28 @@ const renderRow = (item: TeacherList ) => (
     </tr>
 );
 
-const TeachersListPage = async () => {
+const TeachersListPage = async ({ 
+    searchParams, 
+}: { 
+    searchParams: { [key: string]: string | undefined };
+}) => {
 
-    const data = await prisma.teacher.findMany({
+    const {page, ...queryParams} = searchParams
+
+    const p = page ? parseInt(page) : 1;
+
+    const [data, count] = await prisma.$transaction([
+
+        prisma.teacher.findMany({
         include: {
             subjects: true,
             classes: true,
-        }
-    })
-
-    console.log(data)
+        },
+        take: ITEM_PER_PAGE,
+        skip: ITEM_PER_PAGE * (p - 1),
+    }),
+        prisma.teacher.count(),
+    ]);
 
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
@@ -121,7 +134,7 @@ const TeachersListPage = async () => {
             {/* LIST */}
             <Table columns={columns} renderRow={renderRow} data={data}/>
             {/* PAGINATION */}
-            <Pagination />
+            <Pagination page={p} count={count}/>
         </div>
     );
 }
