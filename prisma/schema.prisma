@@ -181,7 +181,7 @@ model Announcement {
   id          Int      @id @default(autoincrement())
   title       String
   description String
-  createdAt   DateTime @default(now())
+  date        DateTime
   // Relations
   classId     Int?
   class       Class?   @relation(fields: [classId], references: [id])
